@@ -8,8 +8,8 @@ android {
         applicationId "com.sptulsian"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 19
+        versionName "3.0.11"
     }
     buildTypes {
         release {
@@ -24,4 +24,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:design:24.2.0'
+    compile 'com.google.firebase:firebase-core:9.4.0' //Analytics
+    compile 'com.google.firebase:firebase-messaging:9.4.0' //Cloud Messaging and Notifications
+    compile 'com.google.firebase:firebase-crash:9.4.0' //Crash Reporting
+    compile 'com.google.firebase:firebase-config:9.4.0' //Remote Config
+    compile 'com.google.firebase:firebase-invites:9.4.0' //Invites
+    compile 'com.google.android.gms:play-services-appindexing:9.4.0' //App Indexing
 }
+apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "123193834603",
+    "firebase_url": "https://sptulsian-stock-market-adviser.firebaseio.com",
+    "project_id": "sptulsian-stock-market-adviser",
+    "storage_bucket": "sptulsian-stock-market-adviser.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123193834603:android:e9e0d9ac517c3c5b",
+        "android_client_info": {
+          "package_name": "com.sptulsian"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123193834603-nj29p8pg2dlaf2r735ne23snlhfmpamc.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "123193834603-mee3a2991t6o21jqe6b37squl0q2evsj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi01ewjAkoKc7NtOzmkPPROetxqwngFqU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
