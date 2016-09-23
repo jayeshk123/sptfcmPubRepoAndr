@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
-
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.sptulsian"
         minSdkVersion 15
@@ -30,5 +30,9 @@ dependencies {
     compile 'com.google.firebase:firebase-config:9.4.0' //Remote Config
     compile 'com.google.firebase:firebase-invites:9.4.0' //Invites
     compile 'com.google.android.gms:play-services-appindexing:9.4.0' //App Indexing
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'org.jsoup:jsoup:1.6.1'
+    compile 'com.github.hotchemi:android-rate:1.0.1'
+
 }
 apply plugin: 'com.google.gms.google-services'

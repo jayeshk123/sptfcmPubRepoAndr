@@ -2,5 +2,7 @@
 <resources>
     <color name="colorPrimary">#005AB4</color> <!--3F51B5-->
     <color name="colorPrimaryDark">#005AB4</color><!--303F9F-->
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#EB6635</color><!--FF4081-->
+    <color name="splash_background">#FFFFFF</color>
+    <color name="transparent">#cc000000</color>
 </resources>
