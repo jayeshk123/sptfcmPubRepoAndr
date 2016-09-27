@@ -73,7 +73,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate");
-        pd = ProgressDialog.show(this, "", "Loading...",false);
+        //pd = ProgressDialog.show(this, "", "Loading...",false);
         responseOk = false;
         Intent intent = getIntent();
         if (intent.hasExtra("click_action")) {
@@ -212,7 +212,7 @@ public class SplashActivity extends Activity {
                         {
                             pd.dismiss();
                         }*/
-                        showProgressLoader(false);
+                        //showProgressLoader(false);
                         Toast.makeText(getApplicationContext(),
                                 "Problem with network. Please try again", Toast.LENGTH_LONG).show();
 
@@ -224,13 +224,13 @@ public class SplashActivity extends Activity {
 
     }
 
-    public void showProgressLoader(Boolean value){
+   /* public void showProgressLoader(Boolean value){
         if(value){
             pd.show();
         }else{
             pd.dismiss();
         }
-    }
+    }*/
 
 
     public class UserLoginTask extends AsyncTask<String, Void, String> {
@@ -300,7 +300,7 @@ public class SplashActivity extends Activity {
                             alert, Toast.LENGTH_LONG).show();
                     System.out.println(pd);
                     //pd.dismiss();
-                    showProgressLoader(false);
+                    //showProgressLoader(false);
                     responseOk = true;
                     goAfterSplashTimeout(new Intent(SplashActivity.this, LoginActivity.class));
 
@@ -309,7 +309,7 @@ public class SplashActivity extends Activity {
                     {
                         pd.dismiss();
                     }*/
-                    showProgressLoader(false);
+                    //showProgressLoader(false);
                     responseOk =true;
                     Toast.makeText(getApplicationContext(),
                             alert, Toast.LENGTH_LONG).show();

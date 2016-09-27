@@ -20,17 +20,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessagingService;
 
 import org.apache.http.util.EncodingUtils;
 
@@ -51,7 +47,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
         myDB = new DBHelper(MainActivity.this);
@@ -99,15 +98,13 @@ public class MainActivity extends Activity {
             System.out.println("Extra"+intent.getExtras());
             if (bundle.getString("SearchText") != null) {
                 reclink = bundle.getString("SearchText");
-                System.out.println("Link" +reclink);
+                System.out.println("Link :" +reclink);
                 if (bundle.getString("Type") != null) {
                     String type = bundle.getString("Type");
                     if (type.equals("Member")) {
                         System.out.println("MemberZone");
-                        reclink = "member-zone"+reclink;
                         redirectWebView(reclink);
                     } else {
-                        reclink = "free-zone"+reclink;
                         redirectWebView(reclink);
                     }
                 } else {
@@ -121,10 +118,8 @@ public class MainActivity extends Activity {
                 if(bundle.getString("alert_type")!=null){
                    String type = bundle.getString("alert_type");
                     if(type.equals("Member")){
-                        reclink = "member-zone"+reclink;
                         redirectWebView(reclink);
                     }else{
-                        reclink = "free-zone"+reclink;
                         redirectWebView(reclink);
                     }
                 }else{
@@ -226,6 +221,8 @@ public class MainActivity extends Activity {
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+//        webView.setInitialScale(250);
         System.out.println("Link" +link);
 
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -239,6 +236,7 @@ public class MainActivity extends Activity {
         password = c2.getString(c2.getColumnIndex(DBHelper.User_COLUMN_password));
 
         if(username != null && password != null){
+
             String postData = "&username="+username+"&password="+password+"&redirecturl="+link;
             webView.postUrl(HomeURL+"ws_redirect_user", EncodingUtils.getBytes(postData, "BASE64"));
             cookies = CookieManager.getInstance().getCookie(HomeURL+"ws_redirect_user");

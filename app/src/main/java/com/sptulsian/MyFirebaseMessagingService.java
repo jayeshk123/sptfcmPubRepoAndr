@@ -66,9 +66,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Integer last = (int)(long)ts;
                 String redLink;
                 if(type.equals("Member")){
-                    redLink= "member-zone"+link;
+                    redLink= /*"member-zone"+*/link;
                 }else{
-                    redLink= "free-zone"+link;
+                    redLink= /*"free-zone"+*/link;
                 }
                 if (isForeground(this)) {
                     // broadcast notification
