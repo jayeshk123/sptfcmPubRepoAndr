@@ -112,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:orientation="horizontal"
+                android:id="@+id/lin2"
                 android:weightSum="100"
                 >
 
@@ -142,7 +143,6 @@
                     />
 
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -157,6 +157,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_username"
                     android:id="@+id/usernameTextView"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="20"
                     />
                 <AutoCompleteTextView
@@ -183,6 +184,7 @@
 
 
 
+
         </android.support.v7.widget.CardView>
 
         <!--<android.support.v7.widget.CardView
@@ -190,7 +192,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/cv3"
             android:elevation="20dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             app:cardCornerRadius="0dp"
             >
 
@@ -236,7 +238,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/cv4"
             android:elevation="20dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             app:cardCornerRadius="0dp"
             >
 
@@ -266,23 +268,33 @@
                     android:layout_weight="80"
                     />
 
-                <ImageView
+                <!--<ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/cv4ImgHazard"
                     android:src="@drawable/hazard_yellow"
                     android:layout_weight="20"
-                    />
+                    />-->
 
             </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"
                 android:layout_marginTop="20dp"
                 android:padding="20dp"
+                android:orientation="vertical"
                 android:gravity="center">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Send Debug Report to Admin"
+                    android:id="@+id/DebugReport"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -290,7 +302,7 @@
                     android:id="@+id/ResetBtn"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"/>
-            </RelativeLayout>
+            </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
@@ -299,7 +311,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/cv5"
             android:elevation="20dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             app:cardCornerRadius="0dp"
             >
 

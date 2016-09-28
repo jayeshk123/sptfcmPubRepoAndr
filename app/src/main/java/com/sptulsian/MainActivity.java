@@ -109,9 +109,9 @@ public class MainActivity extends Activity {
                     }
                 } else {
                     System.out.println("No type bt has extra");
-                    redirectWebView("home");
+                    redirectWebView(reclink);
                 }
-                redirectWebView("home");
+                //redirectWebView("home");
             }else if(bundle.getString("link")!=null){
                 reclink = bundle.getString("link");
                 System.out.println("No Serachtext bt has extra "+bundle.getString("link"));
