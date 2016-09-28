@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,8 +62,9 @@ public class SettingsActivity extends AppCompatActivity {
     String token;
     Button ResetButton, UpdateButton, DebugReport;
     ProgressDialog pd;
-    Integer minHeight;
+    Integer minHeight1,minHeight2,minHeight3,minHeight4,minHeight5;
     private UserLoginTask mAuthTask = null;
+    private UserLoginTask1 mAuthTask1 = null;
     private switchUser mSwitchTask = null;
     private adminDebugReport mDebugReportTask = null;
     private AutoCompleteTextView mEmailView;
@@ -87,7 +89,6 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         myDB = new DBHelper(SettingsActivity.this);
-        minHeight = 50;
         responseOk = false;
 
 
@@ -177,7 +178,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
         }
-        myDB.close();
 
         ///////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////
@@ -265,67 +265,7 @@ public class SettingsActivity extends AppCompatActivity {
         ////////////////////////////////////////////////////////////////
         mEmailView = (AutoCompleteTextView)findViewById(R.id.usernameTextView);
         mPasswordView = (AutoCompleteTextView)findViewById(R.id.passwordTextView);
-        if(!username.equals(null) && !password.equals(null) && !token.equals(null) && !deviceId.equals(null) && !username.contains("app_")){
-            // All set
-            usernameTxt = (AutoCompleteTextView)findViewById(R.id.usernameTextView);
-            passwordTxt = (AutoCompleteTextView)findViewById(R.id.passwordTextView);
-            usernameTxt.setText(username);
-            passwordTxt.setText(password);
-            String message = "All set here!";
-            credsNote = (TextView)findViewById(R.id.credsNote);
-            credsNote.setText(message);
-            Drawable res = getResources().getDrawable(R.drawable.tick);
-            credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
-            credStat.setImageDrawable(res);
 
-
-
-        }else if(token.equals(null)){
-            //Panic!! Update token if not working even for second time ask to reset app.
-            String message = "Something went wrong! \nPlease reset application using debugging section below to get notifications.";
-            credsNote = (TextView)findViewById(R.id.credsNote);
-            credsNote.setText(message);
-            Drawable res = getResources().getDrawable(R.drawable.hazard_red);
-            credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
-            credStat.setImageDrawable(res);
-
-        }else if(username.equals(null)) {
-            //update Credentials
-            String message = "Please enter credentials to continue using website and app services.";
-            credsNote = (TextView)findViewById(R.id.credsNote);
-            credsNote.setText(message);
-            Drawable res = getResources().getDrawable(R.drawable.hazard_red);
-            credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
-            credStat.setImageDrawable(res);
-
-
-        }else if(username.contains("app_")){
-            //Display as free user
-            usernameTxt = (AutoCompleteTextView)findViewById(R.id.usernameTextView);
-            passwordTxt = (AutoCompleteTextView)findViewById(R.id.passwordTextView);
-            usernameTxt.setText(username);
-            passwordTxt.setText(password);
-//            usernameTxt.setEnabled(false);
-//            passwordTxt.setEnabled(false);
-            String message = "Your credentials are valid but your account does not have any valid subscription. Hence you are getting only free alerts.\nClick here to activate membership.";
-            credsNote = (TextView)findViewById(R.id.credsNote);
-            credsNote.setText(message);
-            credsNote.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    Toast.makeText(getApplicationContext(),
-//                            "Application will open playstore...", Toast.LENGTH_LONG).show();
-                    Intent myIntent = new Intent(SettingsActivity.this, MainActivity.class);
-                    myIntent.putExtra("SearchText", "https://dev.sptulsian.com/register/step1");
-                    myIntent.putExtra("Type","Member");//Optional parameters
-                    SettingsActivity.this.startActivity(myIntent);
-                }
-            });
-            Drawable res = getResources().getDrawable(R.drawable.hazard_yellow);
-            credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
-            credStat.setImageDrawable(res);
-
-        }
 
         UpdateButton = (Button)findViewById(R.id.updateBtn);
 
@@ -338,6 +278,26 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+
+        mAuthTask1 = new UserLoginTask1(username, password,token,deviceId);
+        responseOk = false;
+        mAuthTask1.execute();
+        showProgressLoader(true);
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (responseOk == false) {
+                    showProgressLoader(false);
+                    Toast.makeText(getApplicationContext(),
+                            "Problem with network. Please try again", Toast.LENGTH_LONG).show();
+                    Button btn = (Button)findViewById(R.id.updateBtn);
+                    btn.setEnabled(true);
+
+                }
+            }
+        }, 15000);
+
         ///////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////
         ///////////////////////CREDENTIALS Tab ENDED///////////////////////
@@ -364,14 +324,66 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public boolean onPreDraw() {
                 cardView.getViewTreeObserver().removeOnPreDrawListener(this);
-                minHeight = cardView.getHeight();
+                minHeight1 = cardView.getHeight();
                 ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
-                layoutParams.height = minHeight;
+                layoutParams.height = minHeight1;
                 cardView.setLayoutParams(layoutParams);
 
                 return true;
             }
         });
+        cardView2.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                cardView2.getViewTreeObserver().removeOnPreDrawListener(this);
+                minHeight2 = cardView2.getHeight();
+                ViewGroup.LayoutParams layoutParams = cardView2.getLayoutParams();
+                layoutParams.height = minHeight2;
+                cardView2.setLayoutParams(layoutParams);
+
+                return true;
+            }
+        });
+        /*cardView3.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                cardView3.getViewTreeObserver().removeOnPreDrawListener(this);
+                minHeight3 = cardView3.getHeight();
+                ViewGroup.LayoutParams layoutParams = cardView3.getLayoutParams();
+                layoutParams.height = minHeight3;
+                cardView3.setLayoutParams(layoutParams);
+
+                return true;
+            }
+        });*/
+        cardView4.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                cardView4.getViewTreeObserver().removeOnPreDrawListener(this);
+                minHeight4 = cardView4.getHeight();
+                ViewGroup.LayoutParams layoutParams = cardView4.getLayoutParams();
+                layoutParams.height = minHeight4;
+                cardView4.setLayoutParams(layoutParams);
+
+                return true;
+            }
+        });
+        /*cardView5.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                cardView5.getViewTreeObserver().removeOnPreDrawListener(this);
+                minHeight5 = cardView5.getHeight();
+                ViewGroup.LayoutParams layoutParams = cardView5.getLayoutParams();
+                layoutParams.height = minHeight5;
+                cardView5.setLayoutParams(layoutParams);
+
+                return true;
+            }
+        });*/
 
         final ImageView btnExpand = (ImageView) findViewById(R.id.cv1Btn);
         final ImageView btn2Expand = (ImageView) findViewById(R.id.cv2Btn);
@@ -427,6 +439,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });*/
+
         btn4Expand.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -460,25 +473,115 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });*/
 
+     /*   Drawable res = getResources().getDrawable(R.drawable.cancel);
+        btnExpand.setImageDrawable(res);
+        collapseView(cardView,1);
+        btn2Expand.setImageDrawable(res);
+        collapseView(cardView2,2);
+        *//*btn3Expand.setImageDrawable(res);
+        collapseView(cardView3,3);*//*
+        btn4Expand.setImageDrawable(res);
+        collapseView(cardView4,4);
+        *//*btn5Expand.setImageDrawable(res);
+        collapseView(cardView5,5);*//*
+*/
+
 
 
     }
 
     private void toggleCardViewnHeight(CardView cardView, int height, ImageView btn, int tab) {
 
-        if (cardView.getHeight() == minHeight) {
-            // expand
-            Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
-            btn.setImageDrawable(res);
-            expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+        if(tab == 1){
+            if (cardView.getHeight() == minHeight1) {
+                // expand
+                Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
+                btn.setImageDrawable(res);
+                expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+                /*RelativeLayout lin1 = (RelativeLayout) findViewById(R.id.Lin1);
+                lin1.setVisibility(View.VISIBLE);*/
+            } else {
+                // collapse
+                Drawable res = getResources().getDrawable(R.drawable.cancel);
+                btn.setImageDrawable(res);
+                collapseView(cardView,tab);
+                /*RelativeLayout lin1 = (RelativeLayout) findViewById(R.id.Lin1);
+                lin1.setVisibility(View.VISIBLE);*/
 
-        } else {
-            // collapse
-            Drawable res = getResources().getDrawable(R.drawable.cancel);
-            btn.setImageDrawable(res);
-            collapseView(cardView,tab);
 
+            }
+        }else if(tab == 2){
+            if (cardView.getHeight() == minHeight2) {
+                // expand
+                Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
+                btn.setImageDrawable(res);
+                expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+
+            } else {
+                // collapse
+                Drawable res = getResources().getDrawable(R.drawable.cancel);
+                btn.setImageDrawable(res);
+                collapseView(cardView,tab);
+
+            }
+        }else if(tab == 3){
+            if (cardView.getHeight() == minHeight3) {
+                // expand
+                Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
+                btn.setImageDrawable(res);
+                expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+
+            } else {
+                // collapse
+                Drawable res = getResources().getDrawable(R.drawable.cancel);
+                btn.setImageDrawable(res);
+                collapseView(cardView,tab);
+
+            }
+        }else if(tab == 4){
+            if (cardView.getHeight() == minHeight4) {
+                // expand
+                Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
+                btn.setImageDrawable(res);
+                expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+
+            } else {
+                // collapse
+                Drawable res = getResources().getDrawable(R.drawable.cancel);
+                btn.setImageDrawable(res);
+                collapseView(cardView,tab);
+
+            }
+        }else if(tab == 5){
+            if (cardView.getHeight() == minHeight5) {
+                // expand
+                Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
+                btn.setImageDrawable(res);
+                expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+
+            } else {
+                // collapse
+                Drawable res = getResources().getDrawable(R.drawable.cancel);
+                btn.setImageDrawable(res);
+                collapseView(cardView,tab);
+
+            }
+        }else{
+            if (cardView.getHeight() == minHeight1) {
+                // expand
+                Drawable res = getResources().getDrawable(R.drawable.arrow_down_float);
+                btn.setImageDrawable(res);
+                expandView(cardView,height,tab); //'height' is the height of screen which we have measured already.
+
+            } else {
+                // collapse
+                Drawable res = getResources().getDrawable(R.drawable.cancel);
+                btn.setImageDrawable(res);
+                collapseView(cardView,tab);
+
+            }
         }
+
     }
 
 
@@ -486,32 +589,105 @@ public class SettingsActivity extends AppCompatActivity {
 
         if(tab == 1){
             appupdate.setEnabled(true);
+            ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
+                    minHeight1);
+            System.out.println(card.getHeight());
+            final CardView card1 = card;
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
+                    layoutParams.height = val;
+                    card1.setLayoutParams(layoutParams);
+
+                }
+            });
+            anim.start();
         }else if(tab == 2){
+            ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
+                    minHeight2);
+            System.out.println(card.getHeight());
+            final CardView card1 = card;
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
+                    layoutParams.height = val;
+                    card1.setLayoutParams(layoutParams);
 
+                }
+            });
+            anim.start();
         }else if(tab == 3){
+            ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
+                    minHeight3);
+            System.out.println(card.getHeight());
+            final CardView card1 = card;
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
+                    layoutParams.height = val;
+                    card1.setLayoutParams(layoutParams);
 
+                }
+            });
+            anim.start();
         }else if(tab == 4){
             ResetButton.setEnabled(true);
             DebugReport.setEnabled(true);
+            ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
+                    minHeight4);
+            System.out.println(card.getHeight());
+            final CardView card1 = card;
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
+                    layoutParams.height = val;
+                    card1.setLayoutParams(layoutParams);
+
+                }
+            });
+            anim.start();
         }else if(tab == 5){
+            ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
+                    minHeight5);
+            System.out.println(card.getHeight());
+            final CardView card1 = card;
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
+                    layoutParams.height = val;
+                    card1.setLayoutParams(layoutParams);
 
+                }
+            });
+            anim.start();
         }else{
+            ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
+                    minHeight1);
+            System.out.println(card.getHeight());
+            final CardView card1 = card;
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
+                    layoutParams.height = val;
+                    card1.setLayoutParams(layoutParams);
 
+                }
+            });
+            anim.start();
         }
-        ValueAnimator anim = ValueAnimator.ofInt(card.getHeight(),
-                minHeight);
-        final CardView card1 = card;
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = card1.getLayoutParams();
-                layoutParams.height = val;
-                card1.setLayoutParams(layoutParams);
 
-            }
-        });
-        anim.start();
     }
     public void expandView(CardView card,int height,int tab) {
 
@@ -714,13 +890,176 @@ public class SettingsActivity extends AppCompatActivity {
                     password = mPassword;
                     myDB.updateDBUser(1,mEmail,mPassword);
                     LinearLayout mainLayout;
-                    mainLayout = (LinearLayout)findViewById(R.id.CredLinLayout);
+                    mainLayout = (LinearLayout)findViewById(R.id.Lin4);
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
                     Button btn = (Button)findViewById(R.id.updateBtn);
                     btn.setEnabled(true);
                     Toast.makeText(getApplicationContext(),
                             "Credentials Updated Successfully", Toast.LENGTH_LONG).show();
+
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class UserLoginTask1 extends AsyncTask<String, Void, String> {
+
+        private final String mEmail;
+        private final String mPassword;
+        private final String mToken;
+        private final String mDeviceId;
+
+        UserLoginTask1(String email, String password, String token, String deviceid) {
+            mEmail = email;
+            mPassword = password;
+            mToken = token;
+            mDeviceId = deviceid;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(30, TimeUnit.SECONDS)
+                        .build();
+
+
+                RequestBody postData = new FormBody.Builder()
+                        .add("username",mEmail)
+                        .add("password",mPassword)
+                        .add("token", mToken)
+                        .add("deviceId", mDeviceId)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(HomeURL+"/ws_sign_in")
+                        //.header("x-api-key","t1zYkDOmba1kIbJOBXtgO6qC1qSPgWpp4oMKsK9I")
+                        .post(postData)
+                        .build();
+
+                Response response = null;
+              /*  Response httpResponse = client.newCall(request).execute();
+                httpResponse.code();*/
+                response = client.newCall(request).execute();
+                System.out.println(response);
+                return response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            mAuthTask = null;
+
+            try{
+                super.onPostExecute(s);
+                JSONObject reader = new JSONObject(s);
+                JSONObject msg  = reader.getJSONObject("Response");
+                /*Toast.makeText(getApplicationContext(),
+                        String.valueOf(msg), Toast.LENGTH_LONG).show();*/
+                Integer status_code = msg.getInt("Status_code");
+                String alert = msg.getString("Message");
+                if (status_code == 500){
+                    //Invalid
+                    Toast.makeText(getApplicationContext(),
+                            alert, Toast.LENGTH_LONG).show();
+                    Button btn = (Button)findViewById(R.id.updateBtn);
+                    btn.setEnabled(true);
+                    System.out.println(pd);
+                    //pd.dismiss();
+                    showProgressLoader(false);
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                    responseOk = true;
+
+                    String message = "Credentials are wrong! \nPlease update valid credentials to continue using website and application.";
+                    credsNote = (TextView)findViewById(R.id.credsNote);
+                    credsNote.setText(message);
+                    Drawable res = getResources().getDrawable(R.drawable.hazard_red);
+                    credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
+                    credStat.setImageDrawable(res);
+
+
+                } else{
+                    //Valid
+                    showProgressLoader(false);
+                    responseOk =true;
+                    if(!username.equals(null) && !password.equals(null) && !token.equals(null) && !deviceId.equals(null) && !username.contains("app_")){
+                        // All set
+                        usernameTxt = (AutoCompleteTextView)findViewById(R.id.usernameTextView);
+                        passwordTxt = (AutoCompleteTextView)findViewById(R.id.passwordTextView);
+                        usernameTxt.setText(username);
+                        passwordTxt.setText(password);
+                        String message = "All set here!";
+                        credsNote = (TextView)findViewById(R.id.credsNote);
+                        credsNote.setText(message);
+                        Drawable res = getResources().getDrawable(R.drawable.tick);
+                        credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
+                        credStat.setImageDrawable(res);
+
+
+
+                    }else if(token.equals(null)){
+                        //Panic!! Update token if not working even for second time ask to reset app.
+                        String message = "Something went wrong! \nPlease reset application using debugging section below to get notifications.";
+                        credsNote = (TextView)findViewById(R.id.credsNote);
+                        credsNote.setText(message);
+                        Drawable res = getResources().getDrawable(R.drawable.hazard_red);
+                        credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
+                        credStat.setImageDrawable(res);
+
+                    }else if(username.equals(null)) {
+                        //update Credentials
+                        String message = "Please enter credentials to continue using website and app services.";
+                        credsNote = (TextView)findViewById(R.id.credsNote);
+                        credsNote.setText(message);
+                        Drawable res = getResources().getDrawable(R.drawable.hazard_red);
+                        credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
+                        credStat.setImageDrawable(res);
+
+
+                    }else if(username.contains("app_")){
+                        //Display as free user
+                        usernameTxt = (AutoCompleteTextView)findViewById(R.id.usernameTextView);
+                        passwordTxt = (AutoCompleteTextView)findViewById(R.id.passwordTextView);
+                        usernameTxt.setText(username);
+                        passwordTxt.setText(password);
+//            usernameTxt.setEnabled(false);
+//            passwordTxt.setEnabled(false);
+                        String message = "Your credentials are valid but your account does not have any valid subscription. Hence you are getting only free alerts.\nClick here to activate membership.";
+                        credsNote = (TextView)findViewById(R.id.credsNote);
+                        credsNote.setText(message);
+                        credsNote.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+//                    Toast.makeText(getApplicationContext(),
+//                            "Application will open playstore...", Toast.LENGTH_LONG).show();
+                                Intent myIntent = new Intent(SettingsActivity.this, MainActivity.class);
+                                myIntent.putExtra("SearchText", "https://dev.sptulsian.com/register/step1");
+                                myIntent.putExtra("Type","Member");//Optional parameters
+                                SettingsActivity.this.startActivity(myIntent);
+                            }
+                        });
+                        Drawable res = getResources().getDrawable(R.drawable.hazard_yellow);
+                        credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
+                        credStat.setImageDrawable(res);
+
+                    }
+                    LinearLayout mainLayout;
+                    mainLayout = (LinearLayout)findViewById(R.id.Lin4);
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+                    Button btn = (Button)findViewById(R.id.updateBtn);
+                    btn.setEnabled(true);
 
                 }
             }
