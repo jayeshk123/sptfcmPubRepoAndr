@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity {
     String cookies;
     String reclink;
     ProgressDialog pd;
+    FloatingActionButton settingsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,15 @@ public class MainActivity extends Activity {
         c1.close();
         c2.close();
         c3.close();
+        settingsBtn = (FloatingActionButton) findViewById(R.id.fab);
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                settingsBtn.hide();
+            }
+        }, 10000);
 
 
 
@@ -181,7 +192,7 @@ public class MainActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                /*String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                 System.out.println("Refreshed token: " + refreshedToken);
 
 
@@ -194,8 +205,8 @@ public class MainActivity extends Activity {
                 ClipData clip = ClipData.newPlainText(refreshedToken, refreshedToken);
                 clipboard.setPrimaryClip(clip);
                 Snackbar.make(view, "Copied to clipboard", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
+                        .setAction("Action", null).show();*/
+                pd.show();
                 Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 //myIntent.putExtra("key", value); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
@@ -344,6 +355,7 @@ public class MainActivity extends Activity {
                         }
 
                         doubleBackToExitPressedOnce = true;
+                        settingsBtn.show();
                         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
                         new Handler().postDelayed(new Runnable() {
@@ -351,6 +363,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 doubleBackToExitPressedOnce = false;
+                                settingsBtn.hide();
                             }
                         }, 2000);
 //                        }

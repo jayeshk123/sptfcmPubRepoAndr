@@ -3,6 +3,7 @@ package com.sptulsian;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -198,27 +200,37 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Call Switch User Web-service
-                mSwitchTask = new switchUser(username, password);
-                responseOk = false;
-                mSwitchTask.execute();
-                new Handler().postDelayed(new Runnable() {
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle("Reset App")
+                        .setMessage("Do you really want to reset application?\nIt will delete all data and restart app.")
+                        .setIcon(R.drawable.hazard_yellow)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void run() {
-                        if (responseOk == false) {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                mSwitchTask = new switchUser(username, password);
+                                responseOk = false;
+                                mSwitchTask.execute();
+                                new Handler().postDelayed(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        if (responseOk == false) {
                         /*if(pd!=null && pd.isShowing())
                         {
                             pd.dismiss();
                         }*/
-                            showProgressLoader(false);
-                            Toast.makeText(getApplicationContext(),
-                                    "Problem with network. Please try again", Toast.LENGTH_LONG).show();
-                            Button btn = (Button)findViewById(R.id.ResetBtn);
-                            btn.setEnabled(true);
+                                            showProgressLoader(false);
+                                            Toast.makeText(getApplicationContext(),
+                                                    "Problem with network. Please try again", Toast.LENGTH_LONG).show();
+                                            Button btn = (Button)findViewById(R.id.ResetBtn);
+                                            btn.setEnabled(true);
 
-                        }
-                    }
-                }, 15000);
+                                        }
+                                    }
+                                }, 15000);
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+
             }
         });
         DebugReport.setOnClickListener(new View.OnClickListener() {
@@ -226,27 +238,32 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Call Debug Report Web-service
 
+                if(!username.equals(null) && !password.equals(null)){
+                    mDebugReportTask = new adminDebugReport(username, password,token,deviceId);
+                    responseOk = false;
+                    mDebugReportTask.execute();
+                    showProgressLoader(true);
+                    new Handler().postDelayed(new Runnable() {
 
-                mDebugReportTask = new adminDebugReport(username, password,token,deviceId);
-                responseOk = false;
-                mDebugReportTask.execute();
-                showProgressLoader(true);
-                new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (responseOk == false) {
+                                showProgressLoader(false);
+                                Toast.makeText(getApplicationContext(),
+                                        "Problem with network. Please try again", Toast.LENGTH_LONG).show();
+                                Button btn = (Button)findViewById(R.id.DebugReport);
+                                btn.setEnabled(true);
 
-                    @Override
-                    public void run() {
-                        if (responseOk == false) {
-                            showProgressLoader(false);
-                            Toast.makeText(getApplicationContext(),
-                                    "Problem with network. Please try again", Toast.LENGTH_LONG).show();
-                            Button btn = (Button)findViewById(R.id.DebugReport);
-                            btn.setEnabled(true);
-
+                            }
                         }
-                    }
-                }, 15000);
-                Toast.makeText(getApplicationContext(),
-                        "Application will send Debug-Report to admin", Toast.LENGTH_LONG).show();
+                    }, 15000);
+                    Toast.makeText(getApplicationContext(),
+                            "Application will send Debug-Report to admin", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter valid credentials or reset app and choose skip-login to autogenerate.", Toast.LENGTH_LONG).show();
+                }
+
 
             }
         });
@@ -317,6 +334,9 @@ public class SettingsActivity extends AppCompatActivity {
         //cardView3 = (CardView)findViewById(R.id.cv3);
         cardView4 = (CardView)findViewById(R.id.cv4);
         //cardView5 = (CardView)findViewById(R.id.cv5);
+        final LinearLayout cvlin1 = (LinearLayout)findViewById(R.id.cvLin1);
+        final LinearLayout cvlin2 = (LinearLayout)findViewById(R.id.cvLin2);
+        final LinearLayout cvlin4 = (LinearLayout)findViewById(R.id.cvLin4);
 
 
         cardView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -385,6 +405,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });*/
 
+
         final ImageView btnExpand = (ImageView) findViewById(R.id.cv1Btn);
         final ImageView btn2Expand = (ImageView) findViewById(R.id.cv2Btn);
         //final ImageView btn3Expand = (ImageView) findViewById(R.id.cv3Btn);
@@ -394,7 +415,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                toggleCardViewnHeight(cardView,200,btnExpand,1);
+                toggleCardViewnHeight(cardView,cvlin1.getHeight(),btnExpand,1);
 
             }
         });
@@ -402,7 +423,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                toggleCardViewnHeight(cardView,200,btnExpand,1);
+                toggleCardViewnHeight(cardView,cvlin1.getHeight(),btnExpand,1);
 
             }
         });
@@ -411,7 +432,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                toggleCardViewnHeight(cardView2,200,btn2Expand,2);
+                toggleCardViewnHeight(cardView2,cvlin2.getHeight(),btn2Expand,2);
 
             }
         });
@@ -419,7 +440,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                toggleCardViewnHeight(cardView2,200,btn2Expand,2);
+                toggleCardViewnHeight(cardView2,cvlin2.getHeight(),btn2Expand,2);
 
             }
         });
@@ -444,7 +465,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                toggleCardViewnHeight(cardView4,200,btn4Expand,4);
+                toggleCardViewnHeight(cardView4,cvlin4.getHeight(),btn4Expand,4);
 
             }
         });
@@ -452,7 +473,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                toggleCardViewnHeight(cardView4,200,btn4Expand,4);
+                toggleCardViewnHeight(cardView4,cvlin4.getHeight(),btn4Expand,4);
 
             }
         });
@@ -485,6 +506,24 @@ public class SettingsActivity extends AppCompatActivity {
         *//*btn5Expand.setImageDrawable(res);
         collapseView(cardView5,5);*//*
 */
+
+        /*new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                   Drawable res = getResources().getDrawable(R.drawable.cancel);
+        btnExpand.setImageDrawable(res);
+        expandView(cardView,cardView.getHeight(),1);
+        btn2Expand.setImageDrawable(res);
+                expandView(cardView2,cardView2.getHeight(),2);
+//        btn3Expand.setImageDrawable(res);
+//        collapseView(cardView3,3);
+        btn4Expand.setImageDrawable(res);
+                expandView(cardView4,cardView4.getHeight(),4);
+//        btn5Expand.setImageDrawable(res);
+//        collapseView(cardView5,5);
+            }
+        }, 1000);*/
 
 
 
@@ -960,8 +999,23 @@ public class SettingsActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             mAuthTask = null;
 
+            final LinearLayout cvlin1 = (LinearLayout)findViewById(R.id.cvLin1);
+            final LinearLayout cvlin2 = (LinearLayout)findViewById(R.id.cvLin2);
+            final LinearLayout cvlin4 = (LinearLayout)findViewById(R.id.cvLin4);
+
+            final ImageView btnExpand = (ImageView) findViewById(R.id.cv1Btn);
+            final ImageView btn2Expand = (ImageView) findViewById(R.id.cv2Btn);
+            //final ImageView btn3Expand = (ImageView) findViewById(R.id.cv3Btn);
+            final ImageView btn4Expand = (ImageView) findViewById(R.id.cv4Btn);
+            //final ImageView btn5Expand = (ImageView) findViewById(R.id.cv5Btn);
+
+            toggleCardViewnHeight(cardView,cvlin1.getHeight(),btnExpand,1);
+            toggleCardViewnHeight(cardView2,cvlin2.getHeight(),btn2Expand,2);
+            toggleCardViewnHeight(cardView4,cvlin4.getHeight(),btn4Expand,4);
+
             try{
                 super.onPostExecute(s);
+
                 JSONObject reader = new JSONObject(s);
                 JSONObject msg  = reader.getJSONObject("Response");
                 /*Toast.makeText(getApplicationContext(),
@@ -991,6 +1045,10 @@ public class SettingsActivity extends AppCompatActivity {
 
                 } else{
                     //Valid
+
+
+
+
                     showProgressLoader(false);
                     responseOk =true;
                     if(!username.equals(null) && !password.equals(null) && !token.equals(null) && !deviceId.equals(null) && !username.contains("app_")){
@@ -1005,6 +1063,8 @@ public class SettingsActivity extends AppCompatActivity {
                         Drawable res = getResources().getDrawable(R.drawable.tick);
                         credStat = (ImageView)findViewById(R.id.cv2ImgHazard);
                         credStat.setImageDrawable(res);
+
+
 
 
 
@@ -1060,6 +1120,7 @@ public class SettingsActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
                     Button btn = (Button)findViewById(R.id.updateBtn);
                     btn.setEnabled(true);
+
 
                 }
             }

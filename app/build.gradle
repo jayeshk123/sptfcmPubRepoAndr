@@ -8,7 +8,7 @@ android {
         applicationId "com.sptulsian"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 25
+        versionCode 26
         versionName "3.0.11"
     }
     buildTypes {
